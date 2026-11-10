@@ -222,7 +222,7 @@
     outline-offset: 3px;
   }
 
-  h1, h2, h3, h4, h5, h6, p {
+  h1, h2, h3, h4, h5, h6, p, blockquote, figure, dl, dd {
     margin: 0;
     padding: 0;
   }
@@ -451,6 +451,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: fit-content;
     font-size: var(--step--1);
     font-weight: 580;
     line-height: 1.1;
@@ -538,6 +539,7 @@
   .meta-badge {
     display: inline-flex;
     align-items: center;
+    width: fit-content;
     font-size: var(--step--2);
     font-weight: 680;
     font-variant-numeric: tabular-nums;
@@ -580,11 +582,17 @@
   }
 
   .system-kbd, :where(kbd:not([class])) {
+    display: inline-block;
+    padding: 0.2em 0.45em;
     font-family: var(--font-mono);
     font-size: var(--step--2);
     font-weight: 500;
     font-feature-settings: normal;
     line-height: 1;
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 0.35rem;
+    box-shadow: 0 1px 0 var(--color-border-strong);
   }
 }
 
@@ -613,6 +621,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--stack-gap, var(--space-md));
+    min-width: 0;
   }
 
   /* Горизонтальная обёртка для кнопок, чипсов, тегов и цен */
@@ -665,6 +674,7 @@
   .card {
     --card-shadow-color: oklch(0 0 none / 0.08);
 
+    min-width: 0;
     background-color: var(--color-surface-card);
     border-radius: var(--radius-lg);
     cursor: pointer;
