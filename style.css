@@ -66,7 +66,8 @@
     /* Токен базовых глифов Inter (открытая 4, 6, 9 и одноэтажная a) */
     --font-features-base: "cv02", "cv03", "cv04", "cv11";
 
-    /* Базовый кегль по APCA & ISO 9241-303 (16px Mobile -> 19px Desktop) */
+    /* Базовый кегль по APCA & ISO 9241-303 (16px на 375px -> 19px на 1440px,
+       с мягким сжатием до ~15px на ультра-узких экранах 280px типа Galaxy Fold) */
     --base-min: 1rem;
     --base-max: 1.1875rem;
 
@@ -74,17 +75,19 @@
     --scale-min: 1.200;
     --scale-max: 1.250;
 
-    /* Защита высоты экрана (135vb): в горизонтальном режиме телефона шрифт не раздуется */
+    /* Защита высоты экрана (135vb): на высоте 280px в ландшафте шрифт не раздуется */
     --screen-w: min(100vi, 135vb);
     --current-rem: tan(atan2(var(--screen-w), 1rem));
-    --fluid: clamp(0, calc((var(--current-rem) - 23.4375) / (90 - 23.4375)), 1);
+    /* Позволяем --fluid уходить до -0.15 на экранах 280px (17.5rem), чтобы крупные заголовки умещались */
+    --fluid: clamp(-0.15, calc((var(--current-rem) - 23.4375) / (90 - 23.4375)), 1);
+    --fluid-pos: max(0, var(--fluid));
 
     /* Истинная геометрическая прогрессия типографики (--step--2 ... --step-5) */
     --type-scale: calc(var(--scale-min) + (var(--scale-max) - var(--scale-min)) * var(--fluid));
     --step-0:     calc(var(--base-min) + (var(--base-max) - var(--base-min)) * var(--fluid));
 
     --step--2: max(
-                 calc(0.75rem + (0.8125rem - 0.75rem) * var(--fluid)),
+                 calc(0.75rem + (0.8125rem - 0.75rem) * var(--fluid-pos)),
                  calc(var(--step-0) * pow(var(--type-scale), -2))
                );
     --step--1: calc(var(--step-0) * pow(var(--type-scale), -1));
@@ -94,31 +97,28 @@
     --step-4:  calc(var(--step-0) * pow(var(--type-scale), 4));
     --step-5:  calc(var(--step-0) * pow(var(--type-scale), 5));
 
-    /* Резиновая шкала отступов (Mobile -> Desktop через единый --fluid без медиа-запросов) */
-    --space-2xs: calc(0.25rem + 0.125rem * var(--fluid)); /*  4px ->  6px */
-    --space-xs:  calc(0.5rem  + 0.25rem  * var(--fluid)); /*  8px -> 12px */
-    --space-sm:  calc(0.75rem + 0.25rem  * var(--fluid)); /* 12px -> 16px */
-    --space-md:  calc(1rem    + 0.5rem   * var(--fluid)); /* 16px -> 24px */
-    --space-lg:  calc(1.5rem  + 1rem     * var(--fluid)); /* 24px -> 40px */
-    --space-xl:  calc(2rem    + 1.5rem   * var(--fluid)); /* 32px -> 56px */
-    --space-2xl: calc(3rem    + 2.5rem   * var(--fluid)); /* 48px -> 88px */
-    --space-3xl: calc(4rem    + 4rem     * var(--fluid)); /* 64px -> 128px */
+    /* Резиновая шкала отступов (Адаптируется от 280px до 1440px+) */
+    --space-2xs: calc(0.25rem + 0.125rem * var(--fluid-pos)); /*  4px ->  6px */
+    --space-xs:  calc(0.5rem  + 0.25rem  * var(--fluid-pos)); /*  8px -> 12px */
+    --space-sm:  calc(0.75rem + 0.25rem  * var(--fluid-pos)); /* 12px -> 16px */
+    --space-md:  calc(0.875rem + 0.625rem * var(--fluid-pos));/* 14px -> 24px */
+    --space-lg:  calc(1.25rem + 1.25rem  * var(--fluid-pos)); /* 20px -> 40px */
+    --space-xl:  calc(1.75rem + 1.75rem  * var(--fluid-pos)); /* 28px -> 56px */
+    --space-2xl: calc(2.25rem + 3.25rem  * var(--fluid-pos)); /* 36px -> 88px */
+    --space-3xl: calc(3rem    + 5rem     * var(--fluid-pos)); /* 48px -> 128px */
 
     /* Геометрия контейнера и радиусов скругления */
-    --container-max: 84rem;                               /* 1344px */
-    --page-gutter:   var(--space-md);                     /* Боковые поля экрана */
-    --radius-sm:     0.5rem;                              /* Инпуты, бейджи, чипсы */
-    --radius-md:     0.875rem;                            /* Кнопки, малые карточки */
-    --radius-lg:     calc(1rem + 0.5rem * var(--fluid));  /* Карточки, секции, модалки */
-    --radius-full:   9999px;                              /* Пилюли и аватарки */
+    --container-max: 84rem;                                   /* 1344px */
+    --page-gutter:   clamp(0.75rem, 4vi, 1.5rem);             /* На 280px поле 12px, на десктопе 24px */
+    --radius-sm:     0.5rem;                                  /* Инпуты, бейджи, чипсы */
+    --radius-md:     0.875rem;                                /* Кнопки, малые карточки */
+    --radius-lg:     calc(1rem + 0.5rem * var(--fluid-pos));  /* Карточки, секции, модалки */
+    --radius-full:   9999px;                                  /* Пилюли и аватарки */
 
     /* Осевые углы тона в пространстве OKLCH */
     --hue-neutral:         286;     /* Холодный графитовый вектор для всех нейтралей */
     --hue-brand-primary:   40.8638; /* Главный акцент: Фирменный оранжевый (Пик R=100%, B=0%) */
-    --hue-brand-secondary: 239.03;  /* Доп. акцент: Лазурный пик гамута P3 (R=0%, B=100%).
-                                       Альтернативы (при L=0.684862):
-                                       - 220.86 (ровно +180°): sRGB C=0.1255, P3 C=0.1662
-                                       - 246.17 (пик sRGB):    sRGB C=0.1768, P3 C=0.1908 */
+    --hue-brand-secondary: 239.03;  /* Доп. акцент: Лазурный пик гамута P3 (R=0%, B=100%) */
 
     /* Базовые цвета для стандартных экранов (честный предел sRGB без искажения тона) */
     --color-brand-primary:   oklch(0.684862 0.211255 var(--hue-brand-primary));
@@ -182,6 +182,7 @@
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     scrollbar-gutter: stable;
+    overflow-x: clip;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -192,10 +193,12 @@
 
   body {
     margin: 0;
+    min-width: 17.5rem; /* 280px — поддержка Galaxy Fold 1/2 */
+    overflow-x: clip;
     font-family: var(--font-sans);
     font-size: var(--step-0);
     font-weight: 420;
-    line-height: calc(1.45 + 0.15 * var(--fluid));
+    line-height: calc(1.45 + 0.15 * var(--fluid-pos));
     color: var(--color-ink-primary);
     background-color: var(--color-surface-bg);
 
@@ -269,6 +272,7 @@
   button, input, textarea, select {
     font: inherit;
     color: inherit;
+    max-width: 100%;
   }
 
   ::placeholder {
@@ -304,6 +308,8 @@
     line-height: 0.98;
     letter-spacing: -0.03em;
     text-wrap: balance;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .display-hero {
@@ -313,6 +319,8 @@
     letter-spacing: -0.02em;
     text-wrap: balance;
     max-width: 18ch;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .display-quote {
@@ -322,6 +330,7 @@
     letter-spacing: -0.015em;
     text-wrap: balance;
     max-width: 28ch;
+    overflow-wrap: anywhere;
   }
 
   /* --- 2. HEADING (Иерархия секций и модалок) --- */
@@ -330,6 +339,8 @@
     font-weight: 740;
     line-height: 1.15;
     text-wrap: balance;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .heading-section, :where(h2:not([class])) {
@@ -337,6 +348,8 @@
     font-weight: 680;
     line-height: 1.2;
     text-wrap: balance;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .heading-modal, :where(h3:not([class])) {
@@ -364,7 +377,7 @@
   .prose-body, :where(p:not([class])) {
     font-size: var(--step-0);
     font-weight: 420;
-    line-height: calc(1.45 + 0.15 * var(--fluid));
+    line-height: calc(1.45 + 0.15 * var(--fluid-pos));
     max-width: 65ch;
     text-wrap: pretty;
   }
@@ -396,9 +409,9 @@
   .ui-nav-drawer {
     --drawer-w: min(100cqi, 35rem);
     --drawer-rem: tan(atan2(var(--drawer-w), 1rem));
-    --drawer-fluid: clamp(0, calc((var(--drawer-rem) - 18) / (35 - 18)), 1);
+    --drawer-fluid: clamp(0, calc((var(--drawer-rem) - 14) / (35 - 14)), 1);
 
-    font-size: calc(1.125rem + (1.4375rem - 1.125rem) * var(--drawer-fluid));
+    font-size: calc(1rem + (1.4375rem - 1rem) * var(--drawer-fluid));
     font-weight: 540;
     line-height: 1.25;
     text-align: left;
@@ -430,6 +443,7 @@
     font-weight: 540;
     line-height: 1.1;
     user-select: none;
+    white-space: nowrap;
   }
 
   /* Оптическая геометрия текста кнопки (без навязывания цветов и паддингов).
@@ -438,11 +452,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    max-width: 100%;
     font-size: var(--step-0);
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: 0.01em;
     text-box: trim-both cap alphabetic;
+    text-align: center;
     user-select: none;
     white-space: nowrap;
   }
@@ -452,6 +468,7 @@
     align-items: center;
     justify-content: center;
     width: fit-content;
+    max-width: 100%;
     font-size: var(--step--1);
     font-weight: 580;
     line-height: 1.1;
@@ -479,6 +496,7 @@
     font-weight: 740;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
+    white-space: nowrap;
   }
 
   .data-price-md {
@@ -486,6 +504,7 @@
     font-weight: 660;
     font-variant-numeric: tabular-nums;
     line-height: 1.2;
+    white-space: nowrap;
   }
 
   .data-price-strike {
@@ -494,6 +513,7 @@
     font-variant-numeric: tabular-nums;
     text-decoration: line-through;
     color: var(--color-ink-muted);
+    white-space: nowrap;
   }
 
   .data-timer {
@@ -502,6 +522,7 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.04em;
     line-height: 1;
+    white-space: nowrap;
   }
 
   .data-code {
@@ -540,6 +561,7 @@
     display: inline-flex;
     align-items: center;
     width: fit-content;
+    max-width: 100%;
     font-size: var(--step--2);
     font-weight: 680;
     font-variant-numeric: tabular-nums;
@@ -547,6 +569,7 @@
     letter-spacing: 0.06em;
     line-height: 1;
     text-box: trim-both cap alphabetic;
+    white-space: nowrap;
   }
 
   .meta-status {
@@ -578,7 +601,7 @@
     line-height: 1.3;
     color: var(--color-ink-inverse);
     background-color: var(--color-surface-inverse);
-    max-width: 28ch;
+    max-width: min(100%, 28ch);
   }
 
   .system-kbd, :where(kbd:not([class])) {
@@ -597,7 +620,7 @@
 }
 
 /* ==========================================================================
-   СЛОЙ 4: РАСКЛАДКА И СЕТКИ (Структурные примитивы без медиа-запросов)
+   СЛОЙ 4: РАСКЛАДКА И СЕТКИ (Структурные примитивы с защитой 280px)
    ========================================================================== */
 @layer layout {
   /* Центровщик страницы с резиновыми полями и поддержкой безопасных зон экрана */
@@ -608,9 +631,9 @@
     padding-inline-end: env(safe-area-inset-right, 0px);
   }
 
-  /* Авто-адаптивная сетка для карточек товаров/блоков */
+  /* Авто-адаптивная сетка: на экранах <280px сжимается до 100% без горизонтального скролла */
   .grid-auto {
-    --grid-min: 17.5rem; /* 280px — минимальная ширина колонки до переноса */
+    --grid-min: 16rem; /* 256px — комфортно встаёт на 280px экране */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-min)), 1fr));
     gap: var(--space-md);
@@ -630,6 +653,13 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--cluster-gap, var(--space-xs));
+    min-width: 0;
+  }
+
+  /* Защита от распирания колонок грида/флекса длинным контентом на экранах 280px */
+  :where(.grid-auto, .stack, .cluster) > * {
+    min-width: 0;
+    max-width: 100%;
   }
 }
 
@@ -709,8 +739,8 @@
   .backdrop {
     position: fixed;
     inset: 0;
-    width: 100dvw;
-    height: 100dvh;
+    width: 100%;
+    height: 100%;
     background-color: var(--color-backdrop);
     backdrop-filter: blur(6px);
     opacity: 0;
@@ -721,13 +751,19 @@
     touch-action: none;
   }
 
-  /* 6. Боковая шторка меню (Drawer) + контейнер для .ui-nav-drawer */
+  /* 6. Боковая шторка меню (Drawer) + вертикальный скролл на экранах высотой 280px */
   .drawer, .drawer-menu {
     position: fixed;
     top: 0;
+    bottom: 0;
     left: 0;
     width: min(85vi, 24rem);
-    height: 100dvh;
+    max-width: calc(100vi - 2.5rem);
+    height: 100%;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     background-color: var(--color-surface-bg);
     box-shadow: 0.5rem 0 2rem oklch(0 0 none / 0.15);
     z-index: 101;

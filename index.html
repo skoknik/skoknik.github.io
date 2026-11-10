@@ -11,34 +11,74 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800;1,14..32,400..800&display=swap" rel="stylesheet">
 
   <!-- Подключение твоего CSS-фундамента -->
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./foundation.css">
 
-  <!-- Кастомный CSS сайта пишется ВНЕ @layer:
-       благодаря архитектуре слоёв он автоматически имеет приоритет без единого !important -->
+  <!-- Кастомный CSS сайта пишется ВНЕ @layer -->
   <style>
-    /* Липкая шапка с размытием */
+    /* Липкая шапка: всегда строго в одну строку от 280px до 4K */
     .site-header {
       position: sticky;
       top: 0;
       z-index: 50;
-      background-color: oklch(1 0 none / 0.82);
+      background-color: oklch(1 0 none / 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--color-border-subtle);
-      padding-block: var(--space-sm);
+      padding-block: clamp(0.5rem, 2vb, var(--space-sm));
     }
 
     .header-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: var(--space-xs);
+      min-width: 0;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .header-brand-text {
+      min-width: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
       gap: var(--space-md);
+      flex-shrink: 0;
+    }
+
+    .header-inline-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    /* На планшетах и смартфонах (< 860px) ссылки живут в бургер-шторке,
+       чтобы кнопка «Корзина» никогда не переносилась на второй этаж */
+    @media (max-width: 53.75rem) {
+      .header-inline-nav {
+        display: none;
+      }
+    }
+
+    /* На ультра-узких экранах (< 420px, включая Galaxy Fold 280px) скрываем подзаголовок в шапке */
+    @media (max-width: 26.25rem) {
+      .header-subtitle {
+        display: none;
+      }
     }
 
     /* Стилизация кнопок поверх оптического примитива .btn */
     .btn {
-      padding: 0.85em 1.35em;
+      padding: 0.75em 1.15em;
       border-radius: var(--radius-md);
-      gap: 0.55em;
+      gap: 0.45em;
       background-color: var(--color-surface-inverse);
       color: var(--color-ink-inverse);
     }
@@ -63,8 +103,9 @@
     }
 
     .btn--icon {
-      padding: 0.75em;
+      padding: 0.65em;
       aspect-ratio: 1;
+      flex-shrink: 0;
     }
 
     .btn:is(:disabled, [aria-disabled="true"]) {
@@ -74,7 +115,7 @@
 
     /* Чипсы и бейджи */
     .ui-chip {
-      padding: 0.55em 0.95em;
+      padding: 0.5em 0.85em;
       border-radius: var(--radius-full);
       background-color: var(--color-surface-card);
       border: 1px solid var(--color-border-subtle);
@@ -89,7 +130,7 @@
     }
 
     .meta-badge {
-      padding: 0.42em 0.65em;
+      padding: 0.4em 0.6em;
       border-radius: var(--radius-sm);
       background-color: var(--color-surface-inverse);
       color: var(--color-ink-inverse);
@@ -103,18 +144,19 @@
       background-color: var(--color-brand-secondary);
     }
 
-    /* Внутренняя геометрия боковой шторки */
+    /* Внутренняя геометрия боковой шторки: адаптируется под высоту 280px */
     .drawer {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: var(--space-lg);
+      gap: var(--space-md);
+      padding: clamp(0.875rem, 3vb, var(--space-lg)) var(--space-md);
     }
 
     .drawer-nav {
       display: flex;
       flex-direction: column;
-      gap: var(--space-sm);
+      gap: clamp(0.375rem, 1.8vb, var(--space-sm));
     }
 
     /* Секции страницы */
@@ -123,28 +165,27 @@
       border-bottom: 1px solid var(--color-border-subtle);
     }
 
-    /* Панель живой телеметрии */
+    /* Панель живой телеметрии: адаптивная сетка без вылетов на 280px */
     .telemetry-bar {
       background-color: var(--color-surface-inverse);
       color: var(--color-ink-inverse);
       padding: var(--space-sm) var(--space-md);
       border-radius: var(--radius-md);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-sm);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+      gap: var(--space-xs) var(--space-md);
     }
 
     .telemetry-item {
       display: flex;
       align-items: baseline;
-      gap: 0.5em;
+      gap: 0.4em;
+      min-width: 0;
     }
 
     /* Витрина карточек */
     .product-card {
-      padding: var(--space-lg);
+      padding: var(--space-md);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -152,16 +193,26 @@
       border: 1px solid var(--color-border-subtle);
     }
 
+    .card-row-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-2xs) var(--space-sm);
+    }
+
     .product-visual {
-      height: 11rem;
+      min-height: 9.5rem;
       border-radius: var(--radius-md);
       background:
         radial-gradient(circle at 20% 20%, var(--color-brand-primary), transparent 60%),
         radial-gradient(circle at 80% 80%, var(--color-brand-secondary), transparent 65%),
         var(--color-surface-inverse);
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-end;
       justify-content: space-between;
+      gap: var(--space-xs);
       padding: var(--space-md);
       color: var(--color-ink-inverse);
     }
@@ -169,7 +220,7 @@
     /* Демонстрационные плашки палитры OKLCH */
     .swatch-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
       gap: var(--space-sm);
     }
 
@@ -179,18 +230,10 @@
       border: 1px solid var(--color-border-subtle);
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       justify-content: space-between;
+      gap: var(--space-md);
       min-height: 7.5rem;
-    }
-
-    /* Клавиатурные хоткеи и тултипы */
-    .system-kbd {
-      display: inline-block;
-      padding: 0.25em 0.5em;
-      background-color: var(--color-surface-card);
-      border: 1px solid var(--color-border-strong);
-      border-radius: 0.35rem;
-      box-shadow: 0 2px 0 var(--color-border-strong);
     }
 
     .system-tooltip {
@@ -201,9 +244,13 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
       gap: var(--space-xl);
       align-items: center;
+    }
+
+    .hero-grid > * {
+      min-width: 0;
     }
 
     .divider {
@@ -217,14 +264,14 @@
 
   <!-- ========================================================================
        1. БОКОВАЯ ШТОРКА МЕНЮ (.drawer) И ЗАТЕМНЕНИЕ (.backdrop)
-       Поддерживает свайп пальцем/мышью, растяжение при перетягивании и клавишу Esc
+       Поддерживает свайп пальцем/мышью, вертикальный скролл на высоте 280px и Esc
        ======================================================================== -->
   <div class="backdrop" data-backdrop></div>
 
   <aside id="main-drawer" class="drawer" data-menu="default" aria-label="Главное меню">
-    <div class="stack" style="--stack-gap: var(--space-lg);">
+    <div class="stack" style="--stack-gap: var(--space-md);">
       <div class="header-bar">
-        <span class="meta-eyebrow text-accent">AURA // НАВИГАЦИЯ</span>
+        <span class="meta-eyebrow text-accent truncate-1">AURA // НАВИГАЦИЯ</span>
         <button type="button" class="btn btn--surface btn--icon" data-spring="fast" data-menu-close aria-label="Закрыть меню">
           <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
             <path d="M6 6L18 18M6 18L18 6"></path>
@@ -233,10 +280,9 @@
       </div>
 
       <p class="prose-compact">
-        Потяни эту шторку мышью или пальцем влево, чтобы закрыть её с учётом скорости свайпа, или вправо — чтобы увидеть упругое растяжение <code>scaleX</code>.
+        Потяни шторку влево для закрытия со скоростью свайпа, вправо — для упругого <code>scaleX</code>, или прокрути вниз на экране высотой 280px.
       </p>
 
-      <!-- Контейнерные запросы: кегль .ui-nav-drawer зависит от ширины самой шторки (100cqi) -->
       <nav class="drawer-nav" aria-label="Разделы витрины">
         <a href="#hero" class="ui-nav-drawer" data-spring="fast" data-menu-close>01. Витрина и Таймер</a>
         <a href="#physics-lab" class="ui-nav-drawer" data-spring="fast" data-menu-close>02. Лаборатория пружин M3</a>
@@ -246,20 +292,20 @@
       </nav>
     </div>
 
-    <div class="stack" style="--stack-gap: var(--space-xs);">
+    <div class="stack" style="--stack-gap: var(--space-2xs);">
       <div class="meta-status text-success">● Движок 120 FPS активен</div>
       <p class="system-legal">
-        Подсказка: нажми <kbd class="system-kbd">Esc</kbd> даже во время перетаскивания шторки — свайп безопасно отменится.
+        Подсказка: нажми <kbd>Esc</kbd> во время перетаскивания — свайп безопасно отменится.
       </p>
     </div>
   </aside>
 
   <!-- ========================================================================
-       2. ЛИПКАЯ ШАПКА САЙТА С МОРФИНГОМ БУРГЕРА [data-burger]
+       2. ЛИПКАЯ ШАПКА САЙТА (Стоит в одну линию от 280px до 4K)
        ======================================================================== -->
   <header class="site-header">
     <div class="container header-bar">
-      <div class="cluster" style="--cluster-gap: var(--space-sm);">
+      <div class="header-brand">
         <button
           type="button"
           class="btn btn--surface btn--icon"
@@ -267,49 +313,52 @@
           data-menu-toggle="main-drawer"
           aria-label="Открыть меню"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
             <path data-burger d="M4 6L20 6M4 12L20 12M4 18L20 18"></path>
           </svg>
         </button>
-        <div>
-          <div class="heading-group" style="--cluster-gap: var(--space-sm); flex-wrap: nowrap;">AURA DESIGN SYSTEM</div>
-          <div class="meta-breadcrumb">ISO 9241-303 · OKLCH · AOSP Springs</div>
+        <div class="header-brand-text">
+          <div class="heading-group truncate-1">AURA DESIGN</div>
+          <div class="meta-breadcrumb header-subtitle truncate-1">ISO 9241-303 · OKLCH · AOSP Springs</div>
         </div>
       </div>
 
-      <nav class="cluster" style="--cluster-gap: var(--space-md);" aria-label="Быстрые ссылки">
-        <a href="#physics-lab" class="ui-nav-inline" data-spring="fast">Физика</a>
-        <a href="#catalog" class="ui-nav-inline" data-spring="fast">Каталог</a>
-        <a href="#typography" class="ui-nav-inline" data-spring="fast">Типографика</a>
+      <div class="header-actions">
+        <nav class="header-inline-nav" aria-label="Быстрые ссылки">
+          <a href="#physics-lab" class="ui-nav-inline" data-spring="fast">Физика</a>
+          <a href="#catalog" class="ui-nav-inline" data-spring="fast">Каталог</a>
+          <a href="#typography" class="ui-nav-inline" data-spring="fast">Типографика</a>
+        </nav>
+
         <button type="button" class="btn btn--primary" data-spring="fast" id="cart-header-btn">
           <span>Корзина</span>
           <span class="meta-badge" id="cart-count">2</span>
         </button>
-      </nav>
+      </div>
     </div>
   </header>
 
   <main>
     <!-- ======================================================================
-         3. ПАНЕЛЬ ЖИВОЙ ТЕЛЕМЕТРИИ ЯДРА (Тригонометрия CSS + Состояние пружин)
+         3. ПАНЕЛЬ ЖИВОЙ ТЕЛЕМЕТРИИ ЯДРА (Адаптивная сетка с защитой 280px)
          ====================================================================== -->
     <div class="container" style="padding-top: var(--space-md);">
       <div class="telemetry-bar" role="status" aria-live="polite">
         <div class="telemetry-item">
           <span class="meta-eyebrow text-muted">CSS --fluid:</span>
-          <span class="data-code text-accent" id="tel-fluid">0.000</span>
+          <span class="data-code text-accent truncate-1" id="tel-fluid">0.000</span>
         </div>
         <div class="telemetry-item">
           <span class="meta-eyebrow text-muted">Кегль --step-0:</span>
-          <span class="data-code" id="tel-step0">16.00px</span>
+          <span class="data-code truncate-1" id="tel-step0">16.00px</span>
         </div>
         <div class="telemetry-item">
-          <span class="meta-eyebrow text-muted">Активный элемент:</span>
-          <span class="data-code text-accent-secondary" id="tel-target">Наведи или нажми...</span>
+          <span class="meta-eyebrow text-muted">Элемент:</span>
+          <span class="data-code text-accent-secondary truncate-1" id="tel-target">Наведи курсор...</span>
         </div>
         <div class="telemetry-item">
           <span class="meta-eyebrow text-muted">--scale / --press:</span>
-          <span class="data-code" id="tel-spring">1.0000 / 0.0000</span>
+          <span class="data-code truncate-1" id="tel-spring">1.0000 / 0.0000</span>
         </div>
       </div>
     </div>
@@ -364,12 +413,12 @@
 
           <div class="divider"></div>
 
-          <div class="header-bar">
+          <div class="card-row-wrap">
             <div>
-              <div class="ui-label text-muted">До конца предзаказа (tabular-nums):</div>
+              <div class="ui-label text-muted">До конца предзаказа:</div>
               <div class="data-timer text-accent" id="live-timer">04:18:59.9</div>
             </div>
-            <div style="text-align: right;">
+            <div>
               <div class="data-price-strike">149 990 ₽</div>
               <div class="data-price-lg">119 900 ₽</div>
             </div>
@@ -405,7 +454,7 @@
               </p>
             </div>
             <button type="button" class="btn btn--primary" data-spring="fast">
-              Нажми (Fast Spring)
+              Нажми (Fast)
             </button>
           </div>
 
@@ -422,7 +471,7 @@
               </p>
             </div>
             <button type="button" class="btn btn--secondary" data-spring="default">
-              Нажми (Default Spring)
+              Нажми (Default)
             </button>
           </div>
 
@@ -439,7 +488,7 @@
               </p>
             </div>
             <button type="button" class="btn" data-spring="slow">
-              Нажми (Slow Spring)
+              Нажми (Slow)
             </button>
           </div>
 
@@ -461,24 +510,24 @@
           </div>
         </div>
 
-        <!-- Модификаторы data-no-scale / data-no-effects и управление скоростью шторки -->
+        <!-- Модификаторы data-no-scale / data-no-effects -->
         <div class="card product-card" style="cursor: default;">
-          <div class="header-bar" style="flex-wrap: wrap;">
+          <div class="card-row-wrap">
             <div class="stack" style="--stack-gap: var(--space-2xs);">
-              <h3 class="heading-group">Селективное отключение осей и динамика шторки</h3>
+              <h3 class="heading-group">Селективное отключение осей</h3>
               <p class="prose-compact">
-                Ты можешь отключить только масштаб (<code>data-no-scale</code>) или только тень/затемнение (<code>data-no-effects</code>), а также проверить защиту от некорректных атрибутов.
+                Отключение только масштаба (<code>data-no-scale</code>), только тени (<code>data-no-effects</code>) и защита от некорректных атрибутов.
               </p>
             </div>
             <div class="cluster">
               <button type="button" class="btn btn--surface" data-spring="fast" data-no-scale>
-                Только тень (data-no-scale)
+                Только тень
               </button>
               <button type="button" class="btn btn--surface" data-spring="fast" data-no-effects>
-                Только масштаб (data-no-effects)
+                Только масштаб
               </button>
               <button type="button" class="btn btn--surface" data-spring="toString">
-                Защита от "toString" (Fallback)
+                Fallback "toString"
               </button>
             </div>
           </div>
@@ -491,16 +540,15 @@
          ====================================================================== -->
     <section id="catalog" class="section">
       <div class="container stack" style="--stack-gap: var(--space-lg);">
-        <div class="header-bar" style="flex-wrap: wrap;">
+        <div class="card-row-wrap">
           <div class="stack" style="--stack-gap: var(--space-xs);">
             <span class="meta-eyebrow text-accent-secondary">СТРЕСС-ТЕСТ ВЛОЖЕННОСТИ DOM</span>
             <h2 class="heading-page">Интерактивные карточки товаров</h2>
             <p class="prose-body text-secondary">
-              Каждая карточка ниже сама является пружиной (<code>.card[data-spring]</code>), но внутри неё лежат поля ввода, заблокированные и активные кнопки. Все конфликты событий полностью изолированы.
+              Каждая карточка ниже сама является пружиной (<code>.card[data-spring]</code>), но внутри неё лежат поля ввода, заблокированные и активные кнопки.
             </p>
           </div>
 
-          <!-- Фильтры на чипсах с оптическим выравниванием cap alphabetic -->
           <div class="cluster" role="group" aria-label="Фильтр категорий">
             <button type="button" class="ui-chip" data-spring="fast" aria-pressed="true">Все модели</button>
             <button type="button" class="ui-chip" data-spring="fast" aria-pressed="false">Синтезаторы</button>
@@ -509,15 +557,14 @@
         </div>
 
         <div class="grid-auto">
-          <!-- Карточка 1: Проверка Теста №1 и №14 (Поле ввода внутри карточки с пружиной) -->
+          <!-- Карточка 1: Проверка Теста №1 и №14 -->
           <article class="card product-card" data-spring="default">
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
+              <div class="card-row-wrap">
                 <span class="meta-badge meta-badge--brand">ТЕСТ №1 &amp; №14</span>
                 <span class="data-code">SKU-0104-INP</span>
               </div>
 
-              <!-- Проверка .truncate-1 с кириллическими «Й» и «Д»: внешние отступы не перетираются! -->
               <h3 class="meta-card-title truncate-1" style="margin-bottom: var(--space-2xs);">
                 Йошкар-Олинский студийный предусилитель Джуга-04 Профессиональный
               </h3>
@@ -528,19 +575,19 @@
 
               <div>
                 <label class="ui-label" for="promo-input" style="margin-bottom: var(--space-2xs);">
-                  Введи промокод с пробелами внутри карточки:
+                  Введи промокод с пробелами:
                 </label>
                 <input
                   id="promo-input"
                   type="text"
                   class="ui-input"
-                  placeholder="Например: AURA 2026 SPACE"
+                  placeholder="AURA 2026 SPACE"
                 >
               </div>
             </div>
 
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
+              <div class="card-row-wrap">
                 <span class="meta-status text-success">● В наличии (14 шт.)</span>
                 <span class="data-price-md">42 500 ₽</span>
               </div>
@@ -550,10 +597,10 @@
             </div>
           </article>
 
-          <!-- Карточка 2: Проверка Теста №2 (Disabled-кнопка внутри активной карточки) -->
+          <!-- Карточка 2: Проверка Теста №2 -->
           <article class="card product-card" data-spring="default">
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
+              <div class="card-row-wrap">
                 <span class="meta-badge meta-badge--azure">ТЕСТ №2</span>
                 <span class="data-code">SKU-0208-DIS</span>
               </div>
@@ -569,25 +616,25 @@
               <div class="cluster">
                 <span class="data-metric">Вес: 0.42 кг</span>
                 <span class="data-metric">·</span>
-                <span class="data-metric diagonal-fractions">Размер: 1/2 Rack</span>
+                <span class="data-metric diagonal-fractions">1/2 Rack</span>
               </div>
             </div>
 
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
-                <span class="meta-status text-warning">● Ожидается поставка</span>
+              <div class="card-row-wrap">
+                <span class="meta-status text-warning">● Ожидается</span>
                 <span class="data-price-md">89 000 ₽</span>
               </div>
               <button type="button" class="btn btn--surface" data-spring="fast" disabled>
-                Нет в наличии (Disabled)
+                Нет в наличии
               </button>
             </div>
           </article>
 
-          <!-- Карточка 3: Проверка Теста №3 и №13 (Зажатие карточки и перевод курсора на дочернюю кнопку) -->
+          <!-- Карточка 3: Проверка Теста №3 и №13 -->
           <article class="card product-card" data-spring="default">
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
+              <div class="card-row-wrap">
                 <span class="meta-badge">ТЕСТ №3 &amp; №13</span>
                 <span class="data-code">SKU-0309-NST</span>
               </div>
@@ -608,7 +655,7 @@
             </div>
 
             <div class="stack" style="--stack-gap: var(--space-sm);">
-              <div class="header-bar">
+              <div class="card-row-wrap">
                 <span class="meta-status text-danger">● Остался 1 экз.</span>
                 <div>
                   <span class="data-price-strike">74 000 ₽</span>
@@ -625,7 +672,7 @@
     </section>
 
     <!-- ======================================================================
-         7. ДЕМОНСТРАЦИЯ ВСЕХ 7 АРХЕТИПОВ ТИПОГРАФИКИ И СПИСКОВ (Тест CSS №1 и №4)
+         7. ДЕМОНСТРАЦИЯ ВСЕХ 7 АРХЕТИПОВ ТИПОГРАФИКИ И СПИСКОВ
          ====================================================================== -->
     <section id="typography" class="section">
       <div class="container stack" style="--stack-gap: var(--space-xl);">
@@ -633,12 +680,11 @@
           <span class="meta-eyebrow text-accent">ISO 9241-303 &amp; APCA CONTRAST</span>
           <h2 class="heading-page">7 архетипов типографики</h2>
           <p class="prose-body text-secondary">
-            Геометрическая прогрессия от <code>--step--2</code> до <code>--step-5</code> с защитой высоты экрана <code>135vb</code> в ландшафтном режиме смартфона и открытыми глифами <code>cv02, cv03, cv04, cv11</code> (открытые цифры 4, 6, 9 и одноэтажная «a»).
+            Геометрическая прогрессия от <code>--step--2</code> до <code>--step-5</code> с защитой высоты экрана <code>135vb</code> в ландшафтном режиме смартфона и открытыми глифами <code>cv02, cv03, cv04, cv11</code>.
           </p>
         </div>
 
         <div class="hero-grid" style="align-items: start;">
-          <!-- Левая колонка: Цитата, длинное чтение, списки без классов и ссылки -->
           <div class="stack" style="--stack-gap: var(--space-md);">
             <blockquote class="display-quote">
               «Хороший дизайн — это как можно меньше дизайна, но с безупречной математикой внутри».
@@ -646,12 +692,11 @@
 
             <h3 class="heading-modal">Архетип 3: Prose &amp; Списки без классов (Тест CSS №1)</h3>
             <p>
-              Этот абзац написан обычным тегом <code>&lt;p&gt;</code> без единого класса. Он автоматически получает комфортную ширину строки <code>65ch</code>, плавную высоту строки <code>calc(1.45 + 0.15 * var(--fluid))</code> и деликатное подчёркивание <a href="#typography">встроенных текстовых ссылок</a> с отступом <code>0.18em</code>.
+              Этот абзац написан обычным тегом <code>&lt;p&gt;</code> без единого класса. Он автоматически получает комфортную ширину строки <code>65ch</code>, плавную высоту строки и деликатное подчёркивание <a href="#typography">встроенных текстовых ссылок</a> с отступом <code>0.18em</code>.
             </p>
 
-            <!-- Обычный список <ul> без класса: маркеры не обрезаются за левым краем экрана! -->
             <ul>
-              <li>Маркеры обычного списка <code>&lt;ul&gt;</code> имеют честный отступ <code>padding-inline-start: 1.5em</code> и не улетают в отрицательные координаты.</li>
+              <li>Маркеры обычного списка <code>&lt;ul&gt;</code> имеют честный отступ <code>padding-inline-start: 1.5em</code> и не улетают за левый край экрана.</li>
               <li>Формулы и индексы: H<sub>2</sub>O, E = mc<sup>2</sup>, дроби <span class="diagonal-fractions">1/2, 3/4, 7/8</span> и перечёркнутый ноль в кодах <span class="data-code">0123456789</span>.</li>
               <li>Кириллический тест выносных элементов (<code>cap alphabetic</code>): <strong>Йошкар-Ола, Ёжик, Джугашвили, фьюжн, щука, ртуть</strong>.</li>
             </ul>
@@ -662,7 +707,6 @@
             </div>
           </div>
 
-          <!-- Правая колонка: Шкала размеров --step--2 ... --step-5 и юридический текст -->
           <div class="card product-card" style="cursor: default;">
             <span class="meta-eyebrow text-muted">ГЕОМЕТРИЧЕСКАЯ ШКАЛА КЕГЛЕЙ</span>
 
@@ -683,12 +727,12 @@
               </div>
               <div class="divider"></div>
               <div>
-                <div class="data-code text-muted">--step-2 (.heading-section / .data-price-lg)</div>
+                <div class="data-code text-muted">--step-2 (.data-price-lg)</div>
                 <div class="data-price-lg">249 900 ₽</div>
               </div>
               <div class="divider"></div>
               <div>
-                <div class="data-code text-muted">--step--1 &amp; --step--2 (.system-legal + перенос слов)</div>
+                <div class="data-code text-muted">--step--1 (.system-legal + перенос слов)</div>
                 <p class="system-legal">
                   Юридический микротекст (<code>.system-legal</code>) с автоматической расстановкой кириллических переносов (<code>hyphens: auto</code>): высокопревосходительство, частнопредпринимательский, рентгеноэлектрокардиографический.
                 </p>
@@ -771,10 +815,8 @@
   <script type="module">
     import { initSpringsEngine } from './springs.js';
 
-    // 1. Запуск одной строчкой: активирует все [data-spring] и все меню [data-menu]
     initSpringsEngine();
 
-    // 2. Живая телеметрия CSS-токенов (--fluid и --step-0) при ресайзе окна
     const elFluid = document.getElementById('tel-fluid');
     const elStep0 = document.getElementById('tel-step0');
     const elTarget = document.getElementById('tel-target');
@@ -791,7 +833,6 @@
     window.addEventListener('resize', updateCssTelemetry, { passive: true });
     updateCssTelemetry();
 
-    // 3. Отображение живых значений --scale и --press активного элемента в панели телеметрии
     let trackedEl = null;
     let monitorRaf = 0;
 
@@ -825,7 +866,6 @@
       if (!monitorRaf) monitorRaf = requestAnimationFrame(monitorSpringValues);
     });
 
-    // 4. Живой таймер обратного отсчёта (демонстрация моноширинных цифр tabular-nums)
     const timerEl = document.getElementById('live-timer');
     let remainingTenths = (4 * 3600 + 18 * 60 + 59) * 10 + 9;
 
@@ -839,7 +879,6 @@
       timerEl.textContent = `${hrs}:${mins}:${secs}.${tenths}`;
     }, 100);
 
-    // 5. Интерактивность фильтров-чипсов и счётчика корзины
     document.querySelectorAll('.ui-chip').forEach((chip) => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.ui-chip').forEach((c) => c.setAttribute('aria-pressed', 'false'));
