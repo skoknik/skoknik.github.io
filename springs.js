@@ -556,12 +556,14 @@ export function initAllMenus(
     menuEl.inert = true;
     toggleBtns.forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
 
+    // Без искажения шрифтов и кнопок через scaleX:
+    // при v > 1 работает мягкий физический сдвиг с гиперболическим сопротивлением (макс. +8%)
     const spatial = new Spring(group.spatial, 0, (v) => {
-      const translate = Math.max(0, Math.min(v, 1));
-      const stretch = v > 1 ? 1 + (v - 1) * 0.35 : 1;
+      const overshoot = v > 1 ? Math.tanh((v - 1) * 3) * 0.08 : 0;
+      const translate = Math.max(0, Math.min(v, 1)) + overshoot;
       const isVisible = v > 0.001;
 
-      menuEl.style.transform = `translate3d(${((translate - 1) * 100).toFixed(3)}%, 0, 0) scaleX(${stretch.toFixed(4)})`;
+      menuEl.style.transform = `translate3d(${((translate - 1) * 100).toFixed(3)}%, 0, 0)`;
       menuEl.style.visibility = isVisible ? 'visible' : 'hidden';
 
       if (burgerPaths.length) {
@@ -586,6 +588,9 @@ export function initAllMenus(
     let activePointerId = null;
 
     const detachDragListeners = () => {
+      if (document.documentElement?.style) {
+        document.documentElement.style.userSelect = '';
+      }
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', endDrag);
       window.removeEventListener('pointercancel', endDrag);
@@ -669,15 +674,20 @@ export function initAllMenus(
           startX = e.clientX;
           startVal = spatial.val;
           lastTime = performance.now();
+          if (document.documentElement?.style) {
+            document.documentElement.style.userSelect = 'none';
+          }
+          window.getSelection?.()?.removeAllRanges?.();
         }
         return;
       }
 
+      e.preventDefault?.();
       const now = performance.now();
       const dt = (now - lastTime) / 1000;
       const prev = spatial.val;
       const raw = startVal + (e.clientX - startX) / menuWidth;
-      const next = raw > 1 ? 1 + (raw - 1) * 0.25 : Math.max(0, raw);
+      const next = raw > 1 ? 1 + Math.tanh((raw - 1) * 2) * 0.08 : Math.max(0, raw);
 
       if (dt > 0.001) {
         const instVel = (next - prev) / dt;
