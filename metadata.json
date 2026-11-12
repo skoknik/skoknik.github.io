@@ -1,0 +1,6 @@
+{
+  "name": "Trendyform — Авторские предметы интерьера и 3D-печать",
+  "description": "Интернет-магазин авторских предметов для дома, ваз, светильников и индивидуальных решений для кафе и брендов от студии 3D-печати Trendyform из Новосибирска.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Trendyform — Авторские предметы интерьера и 3D-печать</title>
+    <meta name="description" content="Интернет-магазин авторских предметов для дома, ваз, светильников и индивидуальных решений для кафе и брендов от студии 3D-печати Trendyform из Новосибирска." />
+    <meta property="og:title" content="Trendyform — Авторские предметы интерьера и 3D-печать" />
+    <meta property="og:description" content="Интернет-магазин авторских предметов для дома, ваз, светильников и индивидуальных решений для кафе и брендов от студии 3D-печати Trendyform из Новосибирска." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800;1,14..32,400..800&family=Unbounded:wght@700..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <link rel="stylesheet" href="./src/site.css" />
+  </head>
+  <body>
+    <div>
+      <!-- Полноэкранный бэкдроп для боковых шторок -->
+      <div id="site-backdrop" class="backdrop" data-backdrop></div>
+
+      <!-- 1. Левая шторка навигации (#main-drawer) с кнопкой «Личный кабинет» в самом низу -->
+      <aside id="main-drawer" class="drawer" data-menu="default" aria-label="Главное меню сайта">
+        <div class="stack">
+          <div class="header-bar">
+            <span class="heading-group drawer-eyebrow-unbounded text-accent truncate-1">
+              TRENDYFORM // МЕНЮ
+            </span>
+            <button
+              type="button"
+              class="btn btn--surface btn--icon"
+              data-spring="fast"
+              data-menu-close
+              aria-label="Закрыть меню навигации"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M6 6L18 18M6 18L18 6" />
+              </svg>
+            </button>
+          </div>
+
+          <p class="prose-compact">
+            Создаём выразительные вазы, уютный свет и предметы интерьера, к которым приятно прикасаться каждый день.
+          </p>
+
+          <nav class="drawer-nav" aria-label="Разделы сайта">
+            <a href="#hero" class="ui-nav-drawer" data-spring="fast" data-menu-close>
+              01. Главная
+            </a>
+            <a
+              href="#new-arrivals"
+              class="ui-nav-drawer"
+              data-spring="fast"
+              data-menu-close
+              data-open-catalog
+            >
+              02. Каталог
+            </a>
+            <a href="#custom-order" class="ui-nav-drawer" data-spring="fast" data-menu-close>
+              03. Своя модель
+            </a>
+            <a href="#about" class="ui-nav-drawer" data-spring="fast" data-menu-close>
+              04. О нас
+            </a>
+            <a href="#b2b" class="ui-nav-drawer ui-nav-drawer--accent" data-spring="fast" data-menu-close>
+              05. Для бизнеса →
+            </a>
+          </nav>
+        </div>
+
+        <!-- Кнопка «Личный кабинет» в самом низу меню -->
+        <button
+          type="button"
+          class="btn btn--secondary"
+          style="width: 100%;"
+          data-spring="fast"
+          data-menu-close
+          data-open-account
+        >
+          Личный кабинет
+        </button>
+      </aside>
+
+      <!-- 2. Правая шторка корзины (#cart-drawer) со скроллбаром СЛЕВА -->
+      <aside
+        id="cart-drawer"
+        class="drawer drawer--right"
+        data-menu="default"
+        aria-label="Корзина покупок"
+      >
+        <div class="drawer-mirror-reset">
+          <div class="stack" style="--stack-gap: var(--space-md);">
+            <div class="header-bar">
+              <div class="cluster" style="--cluster-gap: var(--space-xs);">
+                <span class="heading-modal">Корзина</span>
+                <span class="meta-badge meta-badge--brand" id="cart-drawer-count">1</span>
+              </div>
+              <button
+                type="button"
+                class="btn btn--surface btn--icon"
+                data-spring="fast"
+                data-menu-close
+                aria-label="Закрыть корзину"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                  <path d="M6 6L18 18M6 18L18 6" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Индикатор бесплатной доставки от 3 000 ₽ с лазурным акцентом -->
+            <div id="cart-shipping-banner" class="shipping-banner-azure"></div>
+
+            <!-- Состояние пустой корзины -->
+            <div id="cart-empty-state" class="stack" style="--stack-gap: var(--space-xs); padding-block: var(--space-lg);" hidden>
+              <div class="heading-group">В корзине пока пусто</div>
+              <p class="prose-compact">
+                Выберите понравившееся изделие в разделе «Новинки» или откройте полный каталог.
+              </p>
+            </div>
+
+            <!-- Содержимое непустой корзины -->
+            <div id="cart-filled-content" class="stack" style="--stack-gap: var(--space-sm);">
+              <div id="cart-items-list" class="stack" style="--stack-gap: var(--space-sm);"></div>
+
+              <div class="stack" style="--stack-gap: var(--space-2xs);">
+                <label for="cart-promo-input" class="ui-label">
+                  Промокод
+                </label>
+                <input
+                  id="cart-promo-input"
+                  type="text"
+                  class="ui-input"
+                  placeholder="Введите промокод"
+                />
+                <span id="cart-promo-status" class="prose-compact text-success" hidden></span>
+              </div>
+
+              <div class="divider"></div>
+
+              <div id="cart-totals-summary" class="stack" style="--stack-gap: 0.35rem; font-size: var(--step--1);"></div>
+
+              <form
+                id="cart-checkout-form"
+                class="stack"
+                style="--stack-gap: var(--space-xs); padding-top: var(--space-xs);"
+                novalidate
+              >
+                <div>
+                  <span class="ui-label" style="margin-bottom: var(--space-2xs);">
+                    Служба доставки
+                  </span>
+                  <div class="cluster" role="group" aria-label="Служба доставки">
+                    <button
+                      type="button"
+                      class="ui-chip delivery-chip delivery-chip--ozon"
+                      data-spring="fast"
+                      data-delivery-provider="Ozon"
+                      aria-pressed="true"
+                    >
+                      Ozon
+                    </button>
+                    <button
+                      type="button"
+                      class="ui-chip delivery-chip delivery-chip--yandex"
+                      data-spring="fast"
+                      data-delivery-provider="Яндекс Доставка"
+                      aria-pressed="false"
+                    >
+                      Яндекс Доставка
+                    </button>
+                    <button
+                      type="button"
+                      class="ui-chip delivery-chip delivery-chip--cdek"
+                      data-spring="fast"
+                      data-delivery-provider="СДЭК"
+                      aria-pressed="false"
+                    >
+                      СДЭК
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="order-name" class="ui-label">
+                    Имя
+                  </label>
+                  <input
+                    id="order-name"
+                    type="text"
+                    class="ui-input"
+                    placeholder="Антон"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="order-phone" class="ui-label">
+                    Телефон
+                  </label>
+                  <input
+                    id="order-phone"
+                    type="tel"
+                    inputmode="numeric"
+                    class="ui-input"
+                    placeholder="+7 (900) 000-00-00"
+                    required
+                  />
+                </div>
+
+                <button type="submit" class="btn btn--primary" data-spring="fast">
+                  Оформить заказ
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 3. Липкая шапка сайта -->
+      <header id="site-header" class="site-header">
+        <div class="container header-bar">
+          <!-- Зона 1: Кнопка меню + Фирменная облачная эмблема и TRENDYFORM шрифтом Unbounded -->
+          <div class="header-brand">
+            <button
+              type="button"
+              class="btn btn--surface btn--icon"
+              data-spring="fast"
+              data-menu-toggle="main-drawer"
+              aria-label="Открыть меню"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path data-burger d="M4 6L20 6M4 12L20 12M4 18L20 18" />
+              </svg>
+            </button>
+            <a href="#hero" class="brand-wordmark">
+              <span class="brand-mark-glyph" aria-hidden="true">
+                <svg width="36" height="26" viewBox="0 0 48 34" fill="none">
+                  <defs>
+                    <clipPath id="mid-cloud-clip-header">
+                      <path d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z" />
+                    </clipPath>
+                  </defs>
+                  <path
+                    d="M12.5 22.5C9.2 22.5 6.6 20.1 6.6 17C6.6 14.1 8.9 11.8 11.9 11.6C13.1 6.2 17.8 2.4 23.4 2.4C29.3 2.4 34.2 6.5 35.4 12C36 11.9 36.6 11.8 37.2 11.8C41.5 11.8 45 15 45 19C45 21 43.3 22.5 41 22.5H12.5Z"
+                    fill="#FF5500"
+                    stroke="#141416"
+                    stroke-width="2.1"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z"
+                    fill="#FFFFFF"
+                    stroke="#141416"
+                    stroke-width="2.1"
+                    stroke-linejoin="round"
+                  />
+                  <g clip-path="url(#mid-cloud-clip-header)">
+                    <line x1="2" y1="12.5" x2="39" y2="12.5" stroke="#141416" stroke-width="1.55" />
+                    <line x1="2" y1="15.6" x2="39" y2="15.6" stroke="#141416" stroke-width="1.55" />
+                    <line x1="2" y1="18.7" x2="39" y2="18.7" stroke="#141416" stroke-width="1.55" />
+                    <line x1="2" y1="21.8" x2="39" y2="21.8" stroke="#141416" stroke-width="1.55" />
+                  </g>
+                  <path
+                    d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z"
+                    fill="none"
+                    stroke="#141416"
+                    stroke-width="2.1"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M11.2 31.8C7.4 31.8 4.4 29.2 4.4 25.9C4.4 22.8 7 20.3 10.4 20.1C11.9 17.2 15.2 15.2 19.1 15.2C23.5 15.2 27.3 17.8 28.5 21.4C31.7 21.7 34.2 24.1 34.2 27C34.2 29.7 31.7 31.8 28.4 31.8H11.2Z"
+                    fill="#141416"
+                    stroke="#141416"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="heading-group brand-title-unbounded">
+                TRENDYFORM
+              </span>
+            </a>
+          </div>
+
+          <!-- Зона 2: Навигация + Кнопки «Личный кабинет» и «Корзина» (на мобилке — квадратные без счётчика) -->
+          <div class="header-actions">
+            <nav class="header-inline-nav" aria-label="Основная навигация">
+              <button
+                type="button"
+                class="ui-nav-inline header-nav-catalog"
+                data-spring="fast"
+              >
+                Каталог
+              </button>
+              <button
+                type="button"
+                class="ui-nav-inline header-nav-custom"
+                data-spring="fast"
+              >
+                Своя модель
+              </button>
+              <a href="#about" class="ui-nav-inline header-nav-about" data-spring="fast">
+                О нас
+              </a>
+              <a href="#b2b" class="ui-nav-inline header-nav-b2b" data-spring="fast">
+                Для бизнеса
+              </a>
+            </nav>
+
+            <button
+              type="button"
+              class="btn btn--surface header-action-btn"
+              data-spring="fast"
+              data-open-account
+              aria-label="Личный кабинет"
+            >
+              <svg class="header-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21a8 8 0 0 1 16 0" />
+              </svg>
+              <span class="header-btn-text">Личный кабинет</span>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn--primary header-action-btn"
+              data-spring="fast"
+              data-menu-toggle="cart-drawer"
+              id="cart-header-btn"
+              aria-label="Корзина, товаров: 1"
+            >
+              <svg class="header-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 8h14l-1 12H6L5 8z" />
+                <path d="M9 8a3 3 0 0 1 6 0" />
+              </svg>
+              <span class="header-btn-text">Корзина</span>
+              <span class="meta-badge" id="cart-count">1</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <!-- РАЗДЕЛ 1: HERO -->
+        <section id="hero" class="photo-banner-section">
+          <img
+            src="./src/assets/images/hero_trendyform_interior_1794492699021.jpg"
+            alt="Интерьер гостиной с вазой и настольной лампой Trendyform"
+            referrerpolicy="no-referrer"
+            class="photo-banner-media"
+          />
+          <div class="photo-banner-scrim"></div>
+
+          <div class="container photo-banner-content">
+            <div class="photo-banner-panel stack" style="--stack-gap: var(--space-md);">
+              <div class="cluster">
+                <span class="meta-badge meta-badge--brand">ДИЗАЙН В КАЖДОЙ ЛИНИИ</span>
+                <span class="meta-badge meta-badge--azure">СОБСТВЕННАЯ РАЗРАБОТКА</span>
+              </div>
+
+              <h1 class="display-mega hero-display-title">
+                Выразительные формы для вашего дома
+              </h1>
+
+              <p class="prose-lead photo-banner-lead">
+                Мы придумываем и создаём оригинальные вазы, уютные светильники и предметы декора, которые наполняют интерьер теплом и становятся частью повседневной жизни.
+              </p>
+
+              <div class="cluster" style="--cluster-gap: var(--space-sm); padding-top: var(--space-2xs);">
+                <button
+                  type="button"
+                  class="btn btn--primary btn--lg"
+                  data-spring="fast"
+                  data-open-catalog
+                >
+                  Смотреть каталог
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ленточка-переход 1 (Оранжевая) -->
+        <div class="section-ribbon-wrap">
+          <div class="section-ribbon section-ribbon--orange">
+            <div class="section-ribbon-track">TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•</div>
+          </div>
+        </div>
+
+        <!-- РАЗДЕЛ 2: НОВИНКИ -->
+        <section id="new-arrivals" class="screen-section">
+          <div class="container stack" style="--stack-gap: var(--space-lg);">
+            <div class="card-row-between" style="align-items: flex-end;">
+              <div class="stack" style="--stack-gap: var(--space-xs);">
+                <div class="cluster">
+                  <span class="meta-badge meta-badge--brand">СВЕЖАЯ КОЛЛЕКЦИЯ</span>
+                  <span class="meta-badge meta-badge--azure">СКИДКИ</span>
+                </div>
+                <h2 class="heading-page">Новинки</h2>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn--primary new-arrivals-desktop-cta"
+                data-spring="fast"
+              >
+                Смотреть весь каталог
+              </button>
+            </div>
+
+            <!-- Десктоп (4 в ряд) и Планшет (сетка 2×2) с выравниванием через CSS subgrid -->
+            <div id="new-arrivals-grid" class="new-arrivals-grid"></div>
+
+            <!-- Мобильная круговая свайп-лента -->
+            <div class="new-arrivals-carousel" aria-label="Лента новинок">
+              <div id="carousel-peek-viewport" class="carousel-peek-viewport">
+                <div id="carousel-peek-stage" class="carousel-peek-stage"></div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn--primary btn--lg"
+                data-spring="fast"
+              >
+                Каталог
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ленточка-переход 2 (Синяя) -->
+        <div class="section-ribbon-wrap">
+          <div class="section-ribbon section-ribbon--blue">
+            <div class="section-ribbon-track">TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•</div>
+          </div>
+        </div>
+
+        <!-- РАЗДЕЛ 3: ЗАКАЗАТЬ СВОЮ МОДЕЛЬ -->
+        <section id="custom-order" class="screen-section">
+          <div class="container stack" style="--stack-gap: var(--space-md);">
+            <div class="cluster">
+              <span class="meta-badge meta-badge--brand">СВОЯ МОДЕЛЬ</span>
+              <span class="meta-badge meta-badge--azure">
+                ИНДИВИДУАЛЬНЫЙ ЗАКАЗ
+              </span>
+            </div>
+
+            <div class="custom-order-grid">
+              <div class="split-col-equal">
+                <div class="stack" style="--stack-gap: var(--space-md);">
+                  <h2 class="heading-page">
+                    Сделаем уникальную модель специально для вас
+                  </h2>
+
+                  <p class="prose-lead text-secondary">
+                    Хотите вазу необычной высоты под любимую нишу, светильник в особенном оттенке или оригинальный подарок по вашему эскизу? Мы придумаем, смоделируем и изготовим изделия специально под вашу задумку.
+                  </p>
+                </div>
+
+                <div class="stack" style="--stack-gap: var(--space-xs);">
+                  <div class="b2b-feature-row">
+                    <div class="heading-group">По вашей фотографии, наброску или описанию</div>
+                    <p class="prose-compact">
+                      Достаточно рассказать задумку своими словами — мы сами подготовим эскиз и согласуем с вами форму перед изготовлением.
+                    </p>
+                  </div>
+                  <div class="b2b-feature-row">
+                    <div class="heading-group">Подбор идеального размера и оттенка</div>
+                    <p class="prose-compact">
+                      Адаптируем пропорции до миллиметра под вашу полку, стол или подоконник.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="card split-card-equal"
+                style="padding: var(--space-lg); cursor: default; border: 0.0625rem solid var(--color-border-subtle);"
+              >
+                <div class="stack" style="--stack-gap: var(--space-2xs);">
+                  <h3 class="heading-modal">Заказать свою модель</h3>
+                  <p class="prose-compact">
+                    Расскажите, что вы хотите создать — мы рассчитаем стоимость и свяжемся с вами.
+                  </p>
+                </div>
+
+                <form class="split-form-equal" novalidate>
+                  <div>
+                    <label for="custom-idea" class="ui-label">
+                      Что вы хотите создать?
+                    </label>
+                    <textarea
+                      id="custom-idea"
+                      rows="3"
+                      class="ui-input"
+                      placeholder="Например: высокая узкая ваза 30 см для сухоцветов или подставка под украшения..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div class="cluster" style="--cluster-gap: var(--space-sm);">
+                    <div style="flex: 1 1 10rem;">
+                      <label for="custom-name" class="ui-label">
+                        Имя
+                      </label>
+                      <input
+                        id="custom-name"
+                        type="text"
+                        class="ui-input"
+                        placeholder="Антон"
+                        required
+                      />
+                    </div>
+                    <div style="flex: 1 1 12rem;">
+                      <label for="custom-contact" class="ui-label">
+                        Телефон
+                      </label>
+                      <input
+                        id="custom-contact"
+                        type="tel"
+                        inputmode="numeric"
+                        class="ui-input"
+                        placeholder="+7 (900) 000-00-00"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn--primary btn--lg" data-spring="fast">
+                    Обсудить мою модель
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ленточка-переход 3 (Оранжевая) -->
+        <div class="section-ribbon-wrap">
+          <div class="section-ribbon section-ribbon--orange">
+            <div class="section-ribbon-track">TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•</div>
+          </div>
+        </div>
+
+        <!-- РАЗДЕЛ 4: О НАС -->
+        <section id="about" class="photo-banner-section">
+          <img
+            src="./src/assets/images/about_trendyform_studio_1794492698580.jpg"
+            alt="Коллекция авторских изделий Trendyform в интерьере студии"
+            referrerpolicy="no-referrer"
+            class="photo-banner-media"
+          />
+          <div class="photo-banner-scrim photo-banner-scrim--about"></div>
+
+          <div class="container photo-banner-content">
+            <div class="photo-banner-panel stack" style="--stack-gap: var(--space-md);">
+              <div class="cluster">
+                <span class="meta-badge meta-badge--brand">О НАС</span>
+                <span class="meta-badge meta-badge--azure">АВТОРСКАЯ РАЗРАБОТКА</span>
+              </div>
+
+              <h2 class="display-hero hero-display-title">
+                Всё началось с желания создавать что-то своё
+              </h2>
+
+              <p class="prose-lead photo-banner-lead">
+                Так появился Trendyform — авторский бренд из Новосибирска, в котором воплотилась наша любовь к дизайну, выразительным формам и нестандартному взгляду на привычные вещи. Каждая наша модель — собственная разработка, созданная, чтобы радовать вас каждый день.
+              </p>
+
+              <div class="cluster" style="--cluster-gap: var(--space-sm); padding-top: var(--space-2xs);">
+                <button
+                  type="button"
+                  class="btn btn--primary btn--lg"
+                  data-spring="fast"
+                >
+                  Узнать больше
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ленточка-переход 4 (Синяя) -->
+        <div class="section-ribbon-wrap">
+          <div class="section-ribbon section-ribbon--blue">
+            <div class="section-ribbon-track">TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•</div>
+          </div>
+        </div>
+
+        <!-- РАЗДЕЛ 5: B2B / ДЛЯ БИЗНЕСА -->
+        <section id="b2b" class="screen-section">
+          <div class="container stack" style="--stack-gap: var(--space-md);">
+            <div class="cluster">
+              <span class="meta-badge meta-badge--brand">ДЛЯ БИЗНЕСА</span>
+              <span class="meta-badge meta-badge--azure">
+                КОРПОРАТИВНЫЙ ЗАКАЗ
+              </span>
+            </div>
+
+            <div class="b2b-grid">
+              <div class="split-col-equal">
+                <div class="stack" style="--stack-gap: var(--space-md);">
+                  <h2 class="heading-page">
+                    Индивидуальные серии в вашем фирменном стиле
+                  </h2>
+
+                  <p class="prose-lead text-secondary">
+                    Мы разрабатываем и создаём авторские изделия для общественных пространств, творческих студий, офисов, заведений и брендов — от акцентного декора и сервировки до фирменных подарков и лимитированных серий.
+                  </p>
+                </div>
+
+                <div class="stack" style="--stack-gap: var(--space-xs);">
+                  <div class="b2b-feature-row b2b-feature-row--azure">
+                    <div class="heading-group">Точное попадание в цвет и эстетику</div>
+                    <p class="prose-compact">
+                      Подберём оттенки под ваш интерьер или брендбук и добавим аккуратный рельефный логотип на изделия.
+                    </p>
+                  </div>
+                  <div class="b2b-feature-row b2b-feature-row--azure">
+                    <div class="heading-group">Комфортные тиражи от 10 штук</div>
+                    <p class="prose-compact">
+                      Сделаем тестовый образец перед запуском партии и бережно доставим заказ через Ozon, Яндекс или СДЭК.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="card split-card-equal"
+                style="padding: var(--space-lg); cursor: default; border: 0.0625rem solid var(--color-border-subtle);"
+              >
+                <div class="stack" style="--stack-gap: var(--space-2xs);">
+                  <h3 class="heading-modal">Обсудить корпоративный заказ</h3>
+                  <p class="prose-compact">
+                    Оставьте контакты — мы свяжемся с вами, предложим варианты оформления и подготовим пробный образец.
+                  </p>
+                </div>
+
+                <form class="split-form-equal" novalidate>
+                  <div>
+                    <label for="b2b-company" class="ui-label">
+                      Название компании, заведения или проекта
+                    </label>
+                    <input
+                      id="b2b-company"
+                      type="text"
+                      class="ui-input"
+                      placeholder="Например: Кофейня «Ботаника»"
+                      required
+                    />
+                  </div>
+
+                  <div class="cluster" style="--cluster-gap: var(--space-sm);">
+                    <div style="flex: 1 1 10rem;">
+                      <label for="b2b-person" class="ui-label">
+                        Имя
+                      </label>
+                      <input
+                        id="b2b-person"
+                        type="text"
+                        class="ui-input"
+                        placeholder="Антон"
+                        required
+                      />
+                    </div>
+                    <div style="flex: 1 1 12rem;">
+                      <label for="b2b-contact" class="ui-label">
+                        Телефон
+                      </label>
+                      <input
+                        id="b2b-contact"
+                        type="tel"
+                        inputmode="numeric"
+                        class="ui-input"
+                        placeholder="+7 (900) 000-00-00"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="b2b-notes" class="ui-label">
+                      Кратко о задаче и желаемом количестве
+                    </label>
+                    <textarea
+                      id="b2b-notes"
+                      rows="2"
+                      class="ui-input"
+                      placeholder="Нужны 20 настольных ваз и салфетниц в тёплом терракотовом цвете..."
+                    ></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn--secondary btn--lg" data-spring="fast">
+                    Связаться
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Ленточка-переход 5 перед футером (Оранжевая) -->
+      <div class="section-ribbon-wrap">
+        <div class="section-ribbon section-ribbon--orange">
+          <div class="section-ribbon-track">TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•TRENDYFORM•</div>
+        </div>
+      </div>
+
+      <!-- ФУТЕР (#delivery) -->
+      <footer id="delivery" class="site-footer">
+        <div class="container stack" style="--stack-gap: var(--space-lg);">
+          <div class="footer-grid">
+            <!-- Раздел 1: TRENDYFORM и Авторский бренд -->
+            <div class="footer-col--brand stack" style="--stack-gap: var(--space-2xs);">
+              <a href="#hero" class="brand-wordmark">
+                <span class="brand-mark-glyph" aria-hidden="true">
+                  <svg width="36" height="26" viewBox="0 0 48 34" fill="none">
+                    <defs>
+                      <clipPath id="mid-cloud-clip-footer">
+                        <path d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z" />
+                      </clipPath>
+                    </defs>
+                    <path
+                      d="M12.5 22.5C9.2 22.5 6.6 20.1 6.6 17C6.6 14.1 8.9 11.8 11.9 11.6C13.1 6.2 17.8 2.4 23.4 2.4C29.3 2.4 34.2 6.5 35.4 12C36 11.9 36.6 11.8 37.2 11.8C41.5 11.8 45 15 45 19C45 21 43.3 22.5 41 22.5H12.5Z"
+                      fill="#FF5500"
+                      stroke="#141416"
+                      stroke-width="2.1"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z"
+                      fill="#FFFFFF"
+                      stroke="#141416"
+                      stroke-width="2.1"
+                      stroke-linejoin="round"
+                    />
+                    <g clip-path="url(#mid-cloud-clip-footer)">
+                      <line x1="2" y1="12.5" x2="39" y2="12.5" stroke="#141416" stroke-width="1.55" />
+                      <line x1="2" y1="15.6" x2="39" y2="15.6" stroke="#141416" stroke-width="1.55" />
+                      <line x1="2" y1="18.7" x2="39" y2="18.7" stroke="#141416" stroke-width="1.55" />
+                      <line x1="2" y1="21.8" x2="39" y2="21.8" stroke="#141416" stroke-width="1.55" />
+                    </g>
+                    <path
+                      d="M9.5 27.5C6.2 27.5 3.6 25.1 3.6 22C3.6 19.1 5.9 16.8 8.9 16.6C10.1 12.6 13.9 9.7 18.5 9.7C23.4 9.7 27.5 12.9 28.6 17.2C29.1 17.1 29.6 17.1 30.2 17.1C34.2 17.1 37.4 20.1 37.4 23.8C37.4 25.9 35.7 27.5 33.4 27.5H9.5Z"
+                      fill="none"
+                      stroke="#141416"
+                      stroke-width="2.1"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M11.2 31.8C7.4 31.8 4.4 29.2 4.4 25.9C4.4 22.8 7 20.3 10.4 20.1C11.9 17.2 15.2 15.2 19.1 15.2C23.5 15.2 27.3 17.8 28.5 21.4C31.7 21.7 34.2 24.1 34.2 27C34.2 29.7 31.7 31.8 28.4 31.8H11.2Z"
+                      fill="#141416"
+                      stroke="#141416"
+                      stroke-width="1.5"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span class="heading-group brand-title-unbounded">TRENDYFORM</span>
+              </a>
+              <p class="prose-compact">Авторский бренд</p>
+            </div>
+
+            <!-- Раздел 2: Магазин -->
+            <div class="footer-col--shop stack" style="--stack-gap: var(--space-xs);">
+              <div class="heading-group">Магазин</div>
+              <div class="footer-links-list">
+                <button type="button" class="footer-link">Каталог</button>
+                <button type="button" class="footer-link">Корзина</button>
+                <button type="button" class="footer-link">Личный кабинет</button>
+              </div>
+            </div>
+
+            <!-- Раздел 3: Покупателю -->
+            <div class="footer-col--buyer stack" style="--stack-gap: var(--space-xs);">
+              <div class="heading-group">Покупателю</div>
+              <div class="footer-links-list">
+                <button type="button" class="footer-link">О нас</button>
+                <button type="button" class="footer-link">Своя модель</button>
+                <button type="button" class="footer-link">Для бизнеса</button>
+                <button type="button" class="footer-link">Оплата и доставка</button>
+                <button type="button" class="footer-link">Оферта</button>
+                <button type="button" class="footer-link">Конфиденциальность</button>
+              </div>
+            </div>
+
+            <!-- Раздел 4: Связь -->
+            <div class="footer-col--contact stack" style="--stack-gap: var(--space-xs);">
+              <div class="heading-group">Связь</div>
+              <div class="footer-links-list">
+                <button type="button" class="footer-link">Telegram</button>
+                <button type="button" class="footer-link">Instagram</button>
+                <button type="button" class="footer-link">TikTok</button>
+                <button type="button" class="footer-link">YouTube</button>
+                <button type="button" class="footer-link">Pinterest</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="card-row-between">
+            <p class="system-legal">
+              © 2026 Trendyform. С любовью к деталям.
+            </p>
+            <p class="system-legal">
+              Разработан
+              <a
+                href="https://github.com/skoknik"
+                target="_blank"
+                rel="noopener noreferrer"
+              >skoknik</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Модальное окно полного каталога -->
+      <div
+        id="catalog-modal-overlay"
+        class="modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="full-catalog-title"
+        hidden
+      >
+        <div
+          class="modal-dialog modal-dialog--wide stack"
+          style="--stack-gap: var(--space-md);"
+        >
+          <div class="card-row-between" style="align-items: center;">
+            <div>
+              <div class="inline-meta">
+                <span>Trendyform</span>
+                <span aria-hidden="true">·</span>
+                <span>Бесплатная доставка от 3 000 ₽ (Ozon, Яндекс, СДЭК)</span>
+              </div>
+              <h2 id="full-catalog-title" class="heading-section">
+                Полный каталог изделий
+              </h2>
+            </div>
+            <button
+              type="button"
+              class="btn btn--surface btn--icon"
+              data-spring="fast"
+              data-close-catalog
+              aria-label="Закрыть каталог"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M6 6L18 18M6 18L18 6" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="card-row-between" style="align-items: center;">
+            <div id="catalog-category-tabs" class="cluster" role="group" aria-label="Категории каталога"></div>
+
+            <input
+              id="catalog-search-input"
+              type="search"
+              class="ui-input"
+              style="max-width: 16rem;"
+              placeholder="Поиск по каталогу..."
+              aria-label="Поиск по каталогу"
+            />
+          </div>
+
+          <div id="catalog-modal-grid" class="catalog-modal-grid"></div>
+        </div>
+      </div>
+
+      <!-- Модальное окно «Личный кабинет» (плавное появление из центра + плавное затемнение через пружины) -->
+      <div
+        id="account-modal-overlay"
+        class="modal-overlay modal-overlay--spring"
+        role="dialog"
+        aria-modal="false"
+        aria-hidden="true"
+        aria-labelledby="account-modal-title"
+      >
+        <div
+          id="account-modal-dialog"
+          class="modal-dialog modal-dialog--small modal-dialog--spring stack"
+          style="--stack-gap: var(--space-md);"
+        >
+          <div class="card-row-between" style="align-items: center;">
+            <span class="meta-badge meta-badge--azure">ПРОФИЛЬ</span>
+            <button
+              type="button"
+              class="btn btn--surface btn--icon"
+              data-spring="fast"
+              data-close-account
+              aria-label="Закрыть личный кабинет"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M6 6L18 18M6 18L18 6" />
+              </svg>
+            </button>
+          </div>
+
+          <h2 id="account-modal-title" class="heading-section">
+            Личный кабинет
+          </h2>
+
+          <form
+            class="stack"
+            style="--stack-gap: var(--space-sm);"
+            novalidate
+          >
+            <p class="prose-compact">
+              Введите номер телефона, чтобы отслеживать статус заказов и сохранять избранные модели.
+            </p>
+            <div>
+              <label for="account-phone-input" class="ui-label">
+                Телефон
+              </label>
+              <input
+                id="account-phone-input"
+                type="tel"
+                inputmode="numeric"
+                class="ui-input"
+                placeholder="+7 (900) 000-00-00"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn--primary" data-spring="fast">
+              Войти
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
